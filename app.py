@@ -30,7 +30,7 @@ app.add_middleware(
 )
 
 class BatchRequest(BaseModel):
-    batchnames: list[str]
+    batchname: list[str]
     status: str
 
 @app.get("/")
@@ -40,12 +40,12 @@ def read_root():
 
 @app.post("/process_again")
 async def update_status(request: BatchRequest):
-    batchnames = request.batchnames
+    batchname = request.batchname
     status = request.status
     modified_count = 0
-    for batchname in batchnames:
+    for name in batchname:
         result = collection.update_many(
-            {"batchname": batchname, "status": status},
+            {"batchname": name, "status": status},
             {"$set": {"status": "notprocessed"}}
         )
         modified_count += result.modified_count
